@@ -64,6 +64,10 @@ class MainWindow(QWidget):
 
         self.setLayout(self.layout)
 
+    def eval_with_power(self, expr):
+        expr = expr.replace("^", "**")
+        return expr
+
     def draw_figures(self):
         line_styles = line_styles = ['-', '--', ':', '-.']
         safe_globals = {
@@ -72,13 +76,13 @@ class MainWindow(QWidget):
             'math': math
         }
         try:
-            tmax = eval(self.tmax_line.text(), safe_globals)
-            L = eval(self.nsamples_line.text(), safe_globals)
-            alpha = eval(self.alpha_line.text(), safe_globals)
-            beta = eval(self.beta_line.text(), safe_globals)
-            gamma = eval(self.gamma_line.text(), safe_globals)
-            a = eval(self.a_line.text(), safe_globals)
-            b = eval(self.b_line.text(), safe_globals)
+            tmax = eval(self.eval_with_power(self.tmax_line.text()), safe_globals)
+            L = eval(self.eval_with_power(self.nsamples_line.text()), safe_globals)
+            alpha = eval(self.eval_with_power(self.alpha_line.text()), safe_globals)
+            beta = eval(self.eval_with_power(self.beta_line.text()), safe_globals)
+            gamma = eval(self.eval_with_power(self.gamma_line.text()), safe_globals)
+            a = eval(self.eval_with_power(self.a_line.text()), safe_globals)
+            b = eval(self.eval_with_power(self.b_line.text()), safe_globals)
             raw_x_values = self.x_line.text().split(",")
             x_values = [float(x_value.strip()) for x_value in raw_x_values if x_value.strip() != ""]
             # print(x_values)
