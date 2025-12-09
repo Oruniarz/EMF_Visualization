@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.fft import ifft
 from output_signal import greens_signal
 import math
+from input_signal import input_signal
 
 
 class MainWindow(QWidget):
@@ -22,22 +23,22 @@ class MainWindow(QWidget):
         self.layout = QVBoxLayout()
 
         tmax_label = QLabel("Max simulation time:")
-        self.tmax_line = QLineEdit()
+        self.tmax_line = QLineEdit("1")
         nsamples_label = QLabel("Number of samples:")
-        self.nsamples_line = QLineEdit()
+        self.nsamples_line = QLineEdit("2**20")
         alpha_label = QLabel("Alpha:")
-        self.alpha_line = QLineEdit()
+        self.alpha_line = QLineEdit("5/6")
         beta_label = QLabel("Beta:")
-        self.beta_line = QLineEdit()
+        self.beta_line = QLineEdit("2/3")
         gamma_label = QLabel("Gamma:")
-        self.gamma_line = QLineEdit()
+        self.gamma_line = QLineEdit("2/3")
         a_label = QLabel("A:")
-        self.a_line = QLineEdit()
+        self.a_line = QLineEdit("2*(9**(1/3))")
         b_label = QLabel("B:")
-        self.b_line = QLineEdit()
+        self.b_line = QLineEdit("450")
 
         x_label = QLabel("Enter distances after decimal point:")
-        self.x_line = QLineEdit()
+        self.x_line = QLineEdit("0.1,0.125,0.15,0.175,0.2")
 
         save_button = QPushButton("Save and proceed")
         save_button.setMaximumSize(self.max_size)
@@ -75,6 +76,7 @@ class MainWindow(QWidget):
             'np': np,
             'math': math
         }
+
         try:
             tmax = eval(self.eval_with_power(self.tmax_line.text()), safe_globals)
             L = eval(self.eval_with_power(self.nsamples_line.text()), safe_globals)
@@ -85,6 +87,8 @@ class MainWindow(QWidget):
             b = eval(self.eval_with_power(self.b_line.text()), safe_globals)
             raw_x_values = self.x_line.text().split(",")
             x_values = [float(x_value.strip()) for x_value in raw_x_values if x_value.strip() != ""]
+            in_sig = input_signal(L, tmax)
+            # plt.plot(in_sig[0], in_sig[1])
             # print(x_values)
         except (SyntaxError, TypeError, NameError, ZeroDivisionError):
             print("Insert correct input")
@@ -97,9 +101,9 @@ class MainWindow(QWidget):
                 t, output_signal = greens_signal(L, tmax, x, alpha, beta, gamma, a, b)
                 plt.plot(t, output_signal, style, label=f'x={x}')
 
-        plt.legend()
-        plt.xlim([0, 0.005])
-        plt.ylim([0, 100])
+        plt.legend(loc="best")
+        plt.xlim([0, 0.1])
+        plt.ylim([-5, 15])
         plt.xlabel('t\n(d)')
         plt.ylabel('u(x,t)')
         plt.grid(True)
