@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 from output_signal import greens_signal
+from input_signal import input_signal
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -17,15 +18,31 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title("Main menu")
-        self.geometry("1200x800")
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+        self.geometry("1500x715")
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=0)
+        self.grid_columnconfigure(2, weight=0)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_rowconfigure(0, weight=0)
 
+        self.first_panel_init()
+        self.second_panel_init()
+        self.figure_panel_init()
+
+        # Third panel
+        # self.sidebar3_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
+        # self.sidebar3_frame.grid(row=0, column=2, sticky="nsew")
+        # self.sidebar3_label = ctk.CTkLabel(self.sidebar3_frame, text="Input",
+        #                                    font=ctk.CTkFont(size=20, weight="bold"))
+        # self.sidebar3_label.grid(row=0, column=2, padx=20, pady=(20, 10))
+
+    def first_panel_init(self):
         # Left panel
         self.sidebar_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
-        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="Parametres", font=ctk.CTkFont(size=20, weight="bold"))
-        self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
+        self.sidebar_label = ctk.CTkLabel(self.sidebar_frame, text="Parametres",
+                                          font=ctk.CTkFont(size=20, weight="bold"))
+        self.sidebar_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
         # Max simulation time
         self.label_tmax = ctk.CTkLabel(self.sidebar_frame, text="Max simulation time [s]:")
@@ -80,22 +97,49 @@ class App(ctk.CTk):
         self.label_x = ctk.CTkLabel(self.sidebar_frame, text="Enter distances after decimal point:")
         self.label_x.grid(row=15, column=0, padx=20, pady=(10, 0))
         self.entry_x = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 0.1,0.125,0.15,0.175,0.2", width=160)
-        self.entry_x.grid(row=16, column=0, padx=20, pady=(0, 10))
+        self.entry_x.grid(row=16, column=0, padx=20, pady=(0, 20))
         self.entry_x.insert(0, "0.1,0.125,0.15,0.175,0.2")
 
-        # Button
-        self.button_draw = ctk.CTkButton(self.sidebar_frame, text="Save and proceed", command=self.save_button)
-        self.button_draw.grid(row=17, column=0, padx=20, pady=20)
+        # Draw figure button
+        self.button_draw = ctk.CTkButton(self, text="Save and proceed", command=self.save_button)
+        self.button_draw.grid(row=17, column=0, columnspan=3, sticky='ew', padx=(10, 10), pady=5)
 
+    def second_panel_init(self):
+        # Third panel
+        self.sidebar2_frame = ctk.CTkFrame(self, width=100, corner_radius=0)
+        self.sidebar2_frame.grid(row=0, column=1, sticky="nsew")
+        self.sidebar2_label = ctk.CTkLabel(self.sidebar2_frame, text="Axes",
+                                           font=ctk.CTkFont(size=20, weight="bold"))
+        self.sidebar2_label.grid(row=0, column=1, padx=20, pady=(20, 10))
+
+        # Axis "x" params
+        self.label_xaxis = ctk.CTkLabel(self.sidebar2_frame, text="Time axis limits after decimal point:")
+        self.label_xaxis.grid(row=1, column=1, padx=20, pady=(10, 0))
+        self.entry_xaxis = ctk.CTkEntry(self.sidebar2_frame, placeholder_text="e.g. 0,0.1", width=100)
+        self.entry_xaxis.grid(row=2, column=1, padx=20, pady=(0, 10))
+        self.entry_xaxis.insert(0, "0,0.1")
+
+        # Axis "y" params
+        self.label_yaxis = ctk.CTkLabel(self.sidebar2_frame, text="'Y' axis limits after decimal point:")
+        self.label_yaxis.grid(row=3, column=1, padx=20, pady=(10, 0))
+        self.entry_yaxis = ctk.CTkEntry(self.sidebar2_frame, placeholder_text="e.g. -5,15", width=100)
+        self.entry_yaxis.grid(row=4, column=1, padx=20, pady=(0, 10))
+        self.entry_yaxis.insert(0, "-5,15")
+
+    def figure_panel_init(self):
         # Right panel
         self.plot_frame = ctk.CTkFrame(self)
-        self.plot_frame.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+        self.plot_frame.grid(row=0, column=3, padx=20, pady=20, sticky="nsew")
 
         # Figure
         self.figure = Figure(figsize=(5, 4), dpi=100)
         self.ax = self.figure.add_subplot(111)
         self.ax.set_title("Waiting for data...")
         self.ax.grid(True, linestyle='--', alpha=0.6)
+        self.ax.set_xlim(0, 0.1)
+        self.ax.set_ylim(-5, 15)
+        self.ax.set_xlabel('t')
+        self.ax.set_ylabel('u(x,t)')
 
         # Figure in TKinter
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.plot_frame)
@@ -126,38 +170,31 @@ class App(ctk.CTk):
             b = eval(self.eval_with_power(self.entry_bparam.get()), safe_globals)
             raw_x_values = self.entry_x.get().split(",")
             x_values = [float(x_value.strip()) for x_value in raw_x_values if x_value.strip() != ""]
-            # in_sig = input_signal(L, tmax)
-            # plt.plot(in_sig[0], in_sig[1])
-            # print(x_values)
+            in_sig = input_signal(L, tmax)
         except (SyntaxError, TypeError, NameError, ZeroDivisionError):
             print("Insert correct input")
         except Exception as e:
             print(f"Error:\n{str(type(e).__name__)}: {str(e)}")
             sys.exit(1)
         else:
+            self.ax.clear()
+            # self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
             for i, x in enumerate(x_values):
                 style = line_styles[i % len(line_styles)]
-                t, output_signal = greens_signal(L, tmax, x, alpha, beta, gamma, a, b)
-                self.ax.plot(t, output_signal, style, label=f'x={x}')
+                output_data = greens_signal(L, tmax, x, alpha, beta, gamma, a, b, in_sig)
+                self.ax.plot(output_data[0], output_data[1], style, label=f'x={x}')
 
-        self.ax.legend(loc="best")
-        self.ax.set_xlim(0,0.1)
-        self.ax.set_ylim(-5, 15)
-        self.ax.set_xlabel('t')
-        self.ax.set_ylabel('u(x,t)')
-        self.ax.grid(True, linestyle='--', alpha=0.6)
-        self.ax.set_title('Figure')
-        self.canvas.draw()
+            time_axis = self.entry_xaxis.get().split(',')
+            self.ax.set_xlim(float(time_axis[0]), float(time_axis[1]))
+            y_axis = self.entry_yaxis.get().split(',')
+            self.ax.set_ylim(float(y_axis[0]), float(y_axis[1]))
 
-        # Czyszczenie i rysowanie nowego wykresu
-        # self.ax.clear()
-        # self.ax.plot(t, y, color='#3B8ED0', linewidth=2)  # Kolor pasujący do motywu
-        # self.ax.set_title(f"Wykres funkcji: $y = {A} \cdot \sin(2\pi \cdot {f} \cdot t)$")
-        # self.ax.set_xlabel("Czas [s]")
-        # self.ax.set_ylabel("Amplituda")
-        # self.ax.grid(True, linestyle='--', alpha=0.6)
-
-        # Odświeżenie widoku
+            self.ax.set_title('Figure')
+            self.ax.legend(loc="best")
+            self.ax.grid(True, linestyle='--', alpha=0.6)
+            self.ax.set_xlabel('t')
+            self.ax.set_ylabel('u(x,t)')
+            self.canvas.draw()
 
 
 if __name__ == "__main__":

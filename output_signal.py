@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.fft import ifft
+from scipy.fft import ifft, fft
+from scipy.signal import hilbert
 
 
-def greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b):
+def greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b, delta_signal):
     # Time step
     dt = tmax / (Nsamples - 1)
 
@@ -23,8 +24,9 @@ def greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b):
     k = np.where(np.real(k) < 0, -k, k)
 
     # Output in the frequency domain
-    # signal_fd = fft(hilbert(delta_signal)) – pomijamy, zakładamy jednostkowy impuls
-    output_fd = np.exp(-k * x)
+    signal_fd = fft(hilbert(delta_signal[1]))
+    output_fd = signal_fd*np.exp(-k * x)
+    # output_fd = np.exp(-k * x)
 
     # Output in the time domain
     output = (2 / dt) * ifft(output_fd)
