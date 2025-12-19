@@ -16,6 +16,16 @@ ctk.set_default_color_theme("blue")
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.example_dict = dict(tmax_example="1.0",
+                                 nsamples_example="2**20",
+                                 alpha_example="5/6",
+                                 beta_example="2/3",
+                                 gamma_example="2/3",
+                                 aparam_example="2*(9**(1/3))",
+                                 bparam_example="450",
+                                 x_example="0.1,0.125,0.15,0.175,0.2",
+                                 time_axis_example="0,0.1",
+                                 y_axis_example="-5,15")
 
         self.title("Main menu")
         self.geometry("1500x715")
@@ -27,14 +37,8 @@ class App(ctk.CTk):
 
         self.first_panel_init()
         self.second_panel_init()
+        # self.third_panel_init()
         self.figure_panel_init()
-
-        # Third panel
-        # self.sidebar3_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
-        # self.sidebar3_frame.grid(row=0, column=2, sticky="nsew")
-        # self.sidebar3_label = ctk.CTkLabel(self.sidebar3_frame, text="Input",
-        #                                    font=ctk.CTkFont(size=20, weight="bold"))
-        # self.sidebar3_label.grid(row=0, column=2, padx=20, pady=(20, 10))
 
     def first_panel_init(self):
         # Left panel
@@ -47,58 +51,58 @@ class App(ctk.CTk):
         # Max simulation time
         self.label_tmax = ctk.CTkLabel(self.sidebar_frame, text="Max simulation time [s]:")
         self.label_tmax.grid(row=1, column=0, padx=20, pady=(10, 0))
-        self.entry_tmax = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 1", width=160)
+        self.entry_tmax = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['tmax_example']}", width=160)
         self.entry_tmax.grid(row=2, column=0, padx=20, pady=(0, 10))
-        self.entry_tmax.insert(0, "1.0")
+        self.entry_tmax.insert(0, self.example_dict['tmax_example'])
 
         # Number of samples
         self.label_nsamples = ctk.CTkLabel(self.sidebar_frame, text="Number of samples:")
         self.label_nsamples.grid(row=3, column=0, padx=20, pady=(10, 0))
-        self.entry_nsamples = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 2**20", width=160)
+        self.entry_nsamples = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['nsamples_example']}", width=160)
         self.entry_nsamples.grid(row=4, column=0, padx=20, pady=(0, 10))
-        self.entry_nsamples.insert(0, "2**20")
+        self.entry_nsamples.insert(0, self.example_dict['nsamples_example'])
 
         # Alpha
         self.label_alpha = ctk.CTkLabel(self.sidebar_frame, text="Alpha:")
         self.label_alpha.grid(row=5, column=0, padx=20, pady=(10, 0))
-        self.entry_alpha = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 5/6", width=160)
+        self.entry_alpha = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['alpha_example']}", width=160)
         self.entry_alpha.grid(row=6, column=0, padx=20, pady=(0, 10))
-        self.entry_alpha.insert(0, "5/6")
+        self.entry_alpha.insert(0, self.example_dict['alpha_example'])
 
         # Beta
         self.label_beta = ctk.CTkLabel(self.sidebar_frame, text="Beta:")
         self.label_beta.grid(row=7, column=0, padx=20, pady=(10, 0))
-        self.entry_beta = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 2/3", width=160)
+        self.entry_beta = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['beta_example']}", width=160)
         self.entry_beta.grid(row=8, column=0, padx=20, pady=(0, 10))
-        self.entry_beta.insert(0, "2/3")
+        self.entry_beta.insert(0, self.example_dict['beta_example'])
 
         # Gamma
         self.label_gamma = ctk.CTkLabel(self.sidebar_frame, text="Gamma:")
         self.label_gamma.grid(row=9, column=0, padx=20, pady=(10, 0))
-        self.entry_gamma = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 2/3", width=160)
+        self.entry_gamma = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['gamma_example']}", width=160)
         self.entry_gamma.grid(row=10, column=0, padx=20, pady=(0, 10))
-        self.entry_gamma.insert(0, "2/3")
+        self.entry_gamma.insert(0, self.example_dict['gamma_example'])
 
         # Parameter A
         self.label_aparam = ctk.CTkLabel(self.sidebar_frame, text="A:")
         self.label_aparam.grid(row=11, column=0, padx=20, pady=(10, 0))
-        self.entry_aparam = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 2*(9**(1/3))", width=160)
+        self.entry_aparam = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['aparam_example']}", width=160)
         self.entry_aparam.grid(row=12, column=0, padx=20, pady=(0, 10))
-        self.entry_aparam.insert(0, "2*(9**(1/3))")
+        self.entry_aparam.insert(0, self.example_dict['aparam_example'])
 
         # Parameter B
         self.label_bparam = ctk.CTkLabel(self.sidebar_frame, text="B:")
         self.label_bparam.grid(row=13, column=0, padx=20, pady=(10, 0))
-        self.entry_bparam = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 450", width=160)
+        self.entry_bparam = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['bparam_example']}", width=160)
         self.entry_bparam.grid(row=14, column=0, padx=20, pady=(0, 10))
-        self.entry_bparam.insert(0, "450")
+        self.entry_bparam.insert(0, self.example_dict['bparam_example'])
 
         # Delta x
         self.label_x = ctk.CTkLabel(self.sidebar_frame, text="Enter distances after decimal point:")
         self.label_x.grid(row=15, column=0, padx=20, pady=(10, 0))
-        self.entry_x = ctk.CTkEntry(self.sidebar_frame, placeholder_text="e.g. 0.1,0.125,0.15,0.175,0.2", width=160)
+        self.entry_x = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['x_example']}", width=160)
         self.entry_x.grid(row=16, column=0, padx=20, pady=(0, 20))
-        self.entry_x.insert(0, "0.1,0.125,0.15,0.175,0.2")
+        self.entry_x.insert(0, self.example_dict['x_example'])
 
         # Draw figure button
         self.button_draw = ctk.CTkButton(self, text="Save and proceed", command=self.save_button)
@@ -115,16 +119,24 @@ class App(ctk.CTk):
         # Axis "x" params
         self.label_xaxis = ctk.CTkLabel(self.sidebar2_frame, text="Time axis limits after decimal point:")
         self.label_xaxis.grid(row=1, column=1, padx=20, pady=(10, 0))
-        self.entry_xaxis = ctk.CTkEntry(self.sidebar2_frame, placeholder_text="e.g. 0,0.1", width=100)
+        self.entry_xaxis = ctk.CTkEntry(self.sidebar2_frame, placeholder_text=f"e.g. {self.example_dict['time_axis_example']}", width=100)
         self.entry_xaxis.grid(row=2, column=1, padx=20, pady=(0, 10))
-        self.entry_xaxis.insert(0, "0,0.1")
+        self.entry_xaxis.insert(0, self.example_dict['time_axis_example'])
 
         # Axis "y" params
         self.label_yaxis = ctk.CTkLabel(self.sidebar2_frame, text="'Y' axis limits after decimal point:")
         self.label_yaxis.grid(row=3, column=1, padx=20, pady=(10, 0))
-        self.entry_yaxis = ctk.CTkEntry(self.sidebar2_frame, placeholder_text="e.g. -5,15", width=100)
+        self.entry_yaxis = ctk.CTkEntry(self.sidebar2_frame, placeholder_text=f"e.g. {self.example_dict['y_axis_example']}", width=100)
         self.entry_yaxis.grid(row=4, column=1, padx=20, pady=(0, 10))
-        self.entry_yaxis.insert(0, "-5,15")
+        self.entry_yaxis.insert(0, self.example_dict['y_axis_example'])
+
+    def third_panel_init(self):
+        # Third panel
+        self.sidebar3_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
+        self.sidebar3_frame.grid(row=0, column=2, sticky="nsew")
+        self.sidebar3_label = ctk.CTkLabel(self.sidebar3_frame, text="Input",
+                                           font=ctk.CTkFont(size=20, weight="bold"))
+        self.sidebar3_label.grid(row=0, column=2, padx=20, pady=(20, 10))
 
     def figure_panel_init(self):
         # Right panel
@@ -170,7 +182,9 @@ class App(ctk.CTk):
             b = eval(self.eval_with_power(self.entry_bparam.get()), safe_globals)
             raw_x_values = self.entry_x.get().split(",")
             x_values = [float(x_value.strip()) for x_value in raw_x_values if x_value.strip() != ""]
+            freq = 2**18
             in_sig = input_signal(L, tmax)
+            # in_sig = input_signal(L, tmax, signal_type=1, amplitude=0.1)
         except (SyntaxError, TypeError, NameError, ZeroDivisionError):
             print("Insert correct input")
         except Exception as e:
@@ -178,7 +192,7 @@ class App(ctk.CTk):
             sys.exit(1)
         else:
             self.ax.clear()
-            # self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
+            self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
             for i, x in enumerate(x_values):
                 style = line_styles[i % len(line_styles)]
                 output_data = greens_signal(L, tmax, x, alpha, beta, gamma, a, b, in_sig)

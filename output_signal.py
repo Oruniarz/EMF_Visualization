@@ -23,10 +23,11 @@ def greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b, delta_signal):
     # Positive value of k
     k = np.where(np.real(k) < 0, -k, k)
 
-    # Output in the frequency domain
-    signal_fd = fft(hilbert(delta_signal[1]))
-    output_fd = signal_fd*np.exp(-k * x)
-    # output_fd = np.exp(-k * x)
+    # Output in the frequency domaim
+    # signal_fd = fft(delta_signal[1])
+    # signal_fd = fft(hilbert(delta_signal[1]))
+    # output_fd = signal_fd*np.exp(-k * x)
+    output_fd = np.exp(-k * x)
 
     # Output in the time domain
     output = (2 / dt) * ifft(output_fd)
