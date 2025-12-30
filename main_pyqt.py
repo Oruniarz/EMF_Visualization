@@ -4,7 +4,7 @@ from PyQt6.QtCore import QSize
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.fft import ifft
-from output_signal import greens_signal
+from output_signal import output_signal
 import math
 from input_signal import input_signal
 
@@ -98,7 +98,7 @@ class MainWindow(QWidget):
         else:
             for i, x in enumerate(x_values):
                 style = line_styles[i % len(line_styles)]
-                t, output_signal = greens_signal(L, tmax, x, alpha, beta, gamma, a, b)
+                t, output_signal = output_signal(L, tmax, x, alpha, beta, gamma, a, b)
                 plt.plot(t, output_signal, style, label=f'x={x}')
 
         plt.legend(loc="best")

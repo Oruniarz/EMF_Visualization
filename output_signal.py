@@ -4,7 +4,7 @@ from scipy.fft import ifft, fft
 from scipy.signal import hilbert
 
 
-def greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b, delta_signal):
+def output_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b, delta_signal):
     # Time step
     dt = tmax / (Nsamples - 1)
 
@@ -23,41 +23,19 @@ def greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b, delta_signal):
     # Positive value of k
     k = np.where(np.real(k) < 0, -k, k)
 
-    # Output in the frequency domaim
-    # signal_fd = fft(delta_signal[1])
-    # signal_fd = fft(hilbert(delta_signal[1]))
-    # output_fd = signal_fd*np.exp(-k * x)
-    output_fd = np.exp(-k * x)
+    # Output in the frequency domain
+    signal_fd = -1j * np.sign(w) * fft(delta_signal[1]) * 1j + fft(delta_signal[1])
+    # signal_fd2 = fft(hilbert(delta_signal[1]))
+    output_fd = signal_fd*np.exp(-k * x)
+    # output_fd2 = signal_fd2*np.exp(-k * x)
+    # output_fd = np.exp(-k * x)
 
     # Output in the time domain
     output = (2 / dt) * ifft(output_fd)
+    # output2 = (2 / dt) * ifft(output_fd2)
 
     # Real part of th eoutput
     output_signal = np.real(output)
+    # output_signal2 = np.real(output2)
 
     return t, output_signal
-
-
-# # Parameteres
-# Nsamples = 1024
-# tmax = 1.0
-# x = 0.5
-# alpha = 0.4
-# beta = 0.2
-# gamma = 0.1
-# a = 1.0
-# b = 0.5
-#
-# # Output
-# t, output_signal = greens_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b)
-#
-# # Plot
-# plt.figure(figsize=(10, 4))
-# plt.plot(t, output_signal, label='Green\'s Function Response')
-# plt.title('Green\'s Function Response in Time Domain')
-# plt.xlabel('Time [s]')
-# plt.ylabel('Amplitude')
-# plt.grid(True)
-# plt.legend()
-# plt.tight_layout()
-# plt.show()

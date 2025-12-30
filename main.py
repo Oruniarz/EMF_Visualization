@@ -1,12 +1,14 @@
 import sys
 import customtkinter as ctk
 import tkinter as tk
+
+from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-from output_signal import greens_signal
+from output_signal import output_signal
 from input_signal import input_signal
 
 ctk.set_appearance_mode("Dark")
@@ -25,7 +27,7 @@ class App(ctk.CTk):
                                  bparam_example="450",
                                  x_example="0.1,0.125,0.15,0.175,0.2",
                                  time_axis_example="0,0.1",
-                                 y_axis_example="-5,15")
+                                 y_axis_example="-5,30")
 
         self.title("Main menu")
         self.geometry("1500x715")
@@ -44,7 +46,7 @@ class App(ctk.CTk):
         # Left panel
         self.sidebar_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
-        self.sidebar_label = ctk.CTkLabel(self.sidebar_frame, text="Parametres",
+        self.sidebar_label = ctk.CTkLabel(self.sidebar_frame, text="Parameters",
                                           font=ctk.CTkFont(size=20, weight="bold"))
         self.sidebar_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
@@ -98,7 +100,7 @@ class App(ctk.CTk):
         self.entry_bparam.insert(0, self.example_dict['bparam_example'])
 
         # Delta x
-        self.label_x = ctk.CTkLabel(self.sidebar_frame, text="Enter distances after decimal point:")
+        self.label_x = ctk.CTkLabel(self.sidebar_frame, text="Enter distances after decimal point [m]:")
         self.label_x.grid(row=15, column=0, padx=20, pady=(10, 0))
         self.entry_x = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['x_example']}", width=160)
         self.entry_x.grid(row=16, column=0, padx=20, pady=(0, 20))
@@ -130,13 +132,13 @@ class App(ctk.CTk):
         self.entry_yaxis.grid(row=4, column=1, padx=20, pady=(0, 10))
         self.entry_yaxis.insert(0, self.example_dict['y_axis_example'])
 
-    def third_panel_init(self):
-        # Third panel
-        self.sidebar3_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
-        self.sidebar3_frame.grid(row=0, column=2, sticky="nsew")
-        self.sidebar3_label = ctk.CTkLabel(self.sidebar3_frame, text="Input",
-                                           font=ctk.CTkFont(size=20, weight="bold"))
-        self.sidebar3_label.grid(row=0, column=2, padx=20, pady=(20, 10))
+    # def third_panel_init(self):
+    #     # Third panel
+    #     self.sidebar3_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
+    #     self.sidebar3_frame.grid(row=0, column=2, sticky="nsew")
+    #     self.sidebar3_label = ctk.CTkLabel(self.sidebar3_frame, text="Input",
+    #                                        font=ctk.CTkFont(size=20, weight="bold"))
+    #     self.sidebar3_label.grid(row=0, column=2, padx=20, pady=(20, 10))
 
     def figure_panel_init(self):
         # Right panel
@@ -182,9 +184,7 @@ class App(ctk.CTk):
             b = eval(self.eval_with_power(self.entry_bparam.get()), safe_globals)
             raw_x_values = self.entry_x.get().split(",")
             x_values = [float(x_value.strip()) for x_value in raw_x_values if x_value.strip() != ""]
-            freq = 2**18
             in_sig = input_signal(L, tmax)
-            # in_sig = input_signal(L, tmax, signal_type=1, amplitude=0.1)
         except (SyntaxError, TypeError, NameError, ZeroDivisionError):
             print("Insert correct input")
         except Exception as e:
@@ -192,10 +192,10 @@ class App(ctk.CTk):
             sys.exit(1)
         else:
             self.ax.clear()
-            self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
+            # self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
             for i, x in enumerate(x_values):
                 style = line_styles[i % len(line_styles)]
-                output_data = greens_signal(L, tmax, x, alpha, beta, gamma, a, b, in_sig)
+                output_data = output_signal(L, tmax, x, alpha, beta, gamma, a, b, in_sig)
                 self.ax.plot(output_data[0], output_data[1], style, label=f'x={x}')
 
             time_axis = self.entry_xaxis.get().split(',')
@@ -203,11 +203,14 @@ class App(ctk.CTk):
             y_axis = self.entry_yaxis.get().split(',')
             self.ax.set_ylim(float(y_axis[0]), float(y_axis[1]))
 
-            self.ax.set_title('Figure')
+            self.ax.set_title('Impulse response of the system')
             self.ax.legend(loc="best")
+            # self.ax.xaxis.set_major_locator(MultipleLocator(0.01))
+            # self.ax.yaxis.set_major_locator(MultipleLocator(5))
+            # self.ax.ticklabel_format(axis='x', style='sci', scilimits=(0, 0))
             self.ax.grid(True, linestyle='--', alpha=0.6)
-            self.ax.set_xlabel('t')
-            self.ax.set_ylabel('u(x,t)')
+            self.ax.set_xlabel('t [s]')
+            self.ax.set_ylabel('u(x,t) [V]')
             self.canvas.draw()
 
 

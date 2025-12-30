@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.fft import ifft
-from output_signal import greens_signal
+from output_signal import output_signal
 
 tmax = 100
 L = 2**20
@@ -28,7 +28,7 @@ for idx, (alpha, beta, gamma, b, xlim_max, ylim, xlabel_tag) in enumerate(fig_pa
     ax = axs[idx]
     for x, style, lw in zip(x_values, line_styles, line_widths):
         print(f'Fig. {idx+7} – processing x = {x}...')
-        t, output_signal = greens_signal(L, tmax, x, alpha, beta, gamma, a_val, b)
+        t, output_signal = output_signal(L, tmax, x, alpha, beta, gamma, a_val, b)
         mask = t <= xlim_max
         ax.plot(t[mask], output_signal[mask], style, linewidth=lw, label=f'x={x}')
 
