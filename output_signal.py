@@ -24,7 +24,7 @@ def output_signal(Nsamples, tmax, x, alpha, beta, gamma, a, b, delta_signal):
     k = np.where(np.real(k) < 0, -k, k)
 
     # Output in the frequency domain
-    signal_fd = -1j * np.sign(w) * fft(delta_signal[1]) * 1j + fft(delta_signal[1])
+    signal_fd = fft(delta_signal[1]) + 1j * (-1j * np.sign(w) * fft(delta_signal[1]))
     # signal_fd2 = fft(hilbert(delta_signal[1]))
     output_fd = signal_fd*np.exp(-k * x)
     # output_fd2 = signal_fd2*np.exp(-k * x)
