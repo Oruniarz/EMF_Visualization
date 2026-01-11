@@ -31,7 +31,7 @@ Plik odpowiedzialny za prawidłowe odpalenie aplikacji to "main.py"
 ### [main.py](Scripts_and_necessary_files/main.py)
 Główny skrypt aplikacji. Po jego uruchomieniu, pojawia się następujące okno:
 
-<br>![main_menu.png](Images/main_menu.png)<br>
+<br>![main_menu.png](Images/main_menu.PNG)<br>
 
 Lewa strona służy do wprowadzania parametrów modelu, symulacji oraz początkowych granic osi wykresu.
 Znajduje się tu też guzik "Save and proceed", służący do uruchamiania symulacji. Po prawej stronie
@@ -59,7 +59,7 @@ generuje sygnał delty Kroneckera.
 ### [error_window.py](Scripts_and_necessary_files/error_window.py)
 Skrypt z klasą "ErrorPopup" odpowiedzialną za okno informującego o wystąpieniu błędu.
 
-<br>![error_window.png](Images/error_window.png)<br>
+<br>![error_window.png](Images/error_window.PNG)<br>
 
 Okno wyświetla się nad głównym oknem programu i blokuje możliwość korzystania z niego. 
 W oknie błędu wyświetlana jest zadana informacja i w skrajnych przypadkach ma ono możliwość zakończenia działania całej
