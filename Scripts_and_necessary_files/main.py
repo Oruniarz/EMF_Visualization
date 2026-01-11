@@ -1,15 +1,13 @@
-import sys
 import customtkinter as ctk
 import tkinter as tk
 
-from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
 import numpy as np
 import math
 from output_signal import output_signal
-from input_signal import input_signal
+from Scripts_and_necessary_files.input_signal import input_signal
+from Scripts_and_necessary_files.error_window import show_error
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -27,7 +25,7 @@ class App(ctk.CTk):
                                  bparam_example="450",
                                  x_example="0.1,0.125,0.15,0.175,0.2",
                                  time_axis_example="0,0.1",
-                                 y_axis_example="-5,30")
+                                 y_axis_example="-1,7")
 
         self.title("Main menu")
         self.geometry("1500x715")
@@ -39,7 +37,6 @@ class App(ctk.CTk):
 
         self.first_panel_init()
         self.second_panel_init()
-        # self.third_panel_init()
         self.figure_panel_init()
 
     def first_panel_init(self):
@@ -53,7 +50,7 @@ class App(ctk.CTk):
         # Max simulation time
         self.label_tmax = ctk.CTkLabel(self.sidebar_frame, text="Max simulation time [s]:")
         self.label_tmax.grid(row=1, column=0, padx=20, pady=(10, 0))
-        self.entry_tmax = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['tmax_example']}", width=160)
+        self.entry_tmax = ctk.CTkEntry(self.sidebar_frame, placeholder_text=f"e.g. {self.example_dict['tmax_example']}",width=160)
         self.entry_tmax.grid(row=2, column=0, padx=20, pady=(0, 10))
         self.entry_tmax.insert(0, self.example_dict['tmax_example'])
 
@@ -132,14 +129,6 @@ class App(ctk.CTk):
         self.entry_yaxis.grid(row=4, column=1, padx=20, pady=(0, 10))
         self.entry_yaxis.insert(0, self.example_dict['y_axis_example'])
 
-    # def third_panel_init(self):
-    #     # Third panel
-    #     self.sidebar3_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
-    #     self.sidebar3_frame.grid(row=0, column=2, sticky="nsew")
-    #     self.sidebar3_label = ctk.CTkLabel(self.sidebar3_frame, text="Input",
-    #                                        font=ctk.CTkFont(size=20, weight="bold"))
-    #     self.sidebar3_label.grid(row=0, column=2, padx=20, pady=(20, 10))
-
     def figure_panel_init(self):
         # Right panel
         self.plot_frame = ctk.CTkFrame(self)
@@ -162,10 +151,6 @@ class App(ctk.CTk):
         self.toolbar = NavigationToolbar2Tk(self.canvas, self.plot_frame)
         self.toolbar.update()
 
-    def eval_with_power(self, expr):
-        expr = expr.replace("^", "**")
-        return expr
-
     def save_button(self):
         line_styles = line_styles = ['-', '--', ':', '-.']
         safe_globals = {
@@ -173,45 +158,53 @@ class App(ctk.CTk):
             'np': np,
             'math': math
         }
+        eval_with_power = lambda expr: expr.replace("^", "**")
         try:
             # Getting data from inputs
-            tmax = eval(self.eval_with_power(self.entry_tmax.get()), safe_globals)
-            L = eval(self.eval_with_power(self.entry_nsamples.get()), safe_globals)
-            alpha = eval(self.eval_with_power(self.entry_alpha.get()), safe_globals)
-            beta = eval(self.eval_with_power(self.entry_beta.get()), safe_globals)
-            gamma = eval(self.eval_with_power(self.entry_gamma.get()), safe_globals)
-            a = eval(self.eval_with_power(self.entry_aparam.get()), safe_globals)
-            b = eval(self.eval_with_power(self.entry_bparam.get()), safe_globals)
+            tmax = eval(eval_with_power(self.entry_tmax.get()), safe_globals)
+            L = eval(eval_with_power(self.entry_nsamples.get()), safe_globals)
+            alpha = eval(eval_with_power(self.entry_alpha.get()), safe_globals)
+            beta = eval(eval_with_power(self.entry_beta.get()), safe_globals)
+            gamma = eval(eval_with_power(self.entry_gamma.get()), safe_globals)
+            a = eval(eval_with_power(self.entry_aparam.get()), safe_globals)
+            b = eval(eval_with_power(self.entry_bparam.get()), safe_globals)
             raw_x_values = self.entry_x.get().split(",")
             x_values = [float(x_value.strip()) for x_value in raw_x_values if x_value.strip() != ""]
             in_sig = input_signal(L, tmax)
-        except (SyntaxError, TypeError, NameError, ZeroDivisionError):
-            print("Insert correct input")
+        except (SyntaxError, TypeError, NameError, ZeroDivisionError, ValueError):
+            show_error(self, "Please insert correct input")
         except Exception as e:
-            print(f"Error:\n{str(type(e).__name__)}: {str(e)}")
-            sys.exit(1)
+            error_msg = f"Fatal error:\n{str(type(e).__name__)}: {str(e)}\n Closing application"
+            show_error(self, error_msg, True)
         else:
-            self.ax.clear()
-            # self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
-            for i, x in enumerate(x_values):
-                style = line_styles[i % len(line_styles)]
-                output_data = output_signal(L, tmax, x, alpha, beta, gamma, a, b, in_sig)
-                self.ax.plot(output_data[0], output_data[1], style, label=f'x={x}')
+            try:
+                # Drawing graphs
+                self.ax.clear()
+                # self.ax.plot(in_sig[0], in_sig[1], label='Input signal')
+                for i, x in enumerate(x_values):
+                    style = line_styles[i % len(line_styles)]
+                    output_data = output_signal(L, tmax, x, alpha, beta, gamma, a, b, in_sig)
+                    self.ax.plot(output_data[0], output_data[1], style, label=f'x={x}')
 
-            time_axis = self.entry_xaxis.get().split(',')
-            self.ax.set_xlim(float(time_axis[0]), float(time_axis[1]))
-            y_axis = self.entry_yaxis.get().split(',')
-            self.ax.set_ylim(float(y_axis[0]), float(y_axis[1]))
+            except (SyntaxError, TypeError, NameError, ZeroDivisionError, ValueError):
+                error_msg = ("Inserted values do not allow for generating a valid output. "
+                             "Please insert different inputs.")
+                show_error(self, error_msg)
+            except Exception as e:
+                error_msg = f"Fatal error:\n{str(type(e).__name__)}: {str(e)}\n Closing application"
+                show_error(self, error_msg, True)
+            else:
+                time_axis = self.entry_xaxis.get().split(',')
+                self.ax.set_xlim(float(time_axis[0]), float(time_axis[1]))
+                y_axis = self.entry_yaxis.get().split(',')
+                self.ax.set_ylim(float(y_axis[0]), float(y_axis[1]))
 
-            self.ax.set_title('Impulse response of the system')
-            self.ax.legend(loc="best")
-            # self.ax.xaxis.set_major_locator(MultipleLocator(0.01))
-            # self.ax.yaxis.set_major_locator(MultipleLocator(5))
-            # self.ax.ticklabel_format(axis='x', style='sci', scilimits=(0, 0))
-            self.ax.grid(True, linestyle='--', alpha=0.6)
-            self.ax.set_xlabel('t [s]')
-            self.ax.set_ylabel('u(x,t) [V]')
-            self.canvas.draw()
+                self.ax.set_title('Impulse response of the system')
+                self.ax.legend(loc="best")
+                self.ax.grid(True, linestyle='--', alpha=0.6)
+                self.ax.set_xlabel('t [s]')
+                self.ax.set_ylabel('u(x,t) [V]')
+                self.canvas.draw()
 
 
 if __name__ == "__main__":
