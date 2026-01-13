@@ -12,7 +12,7 @@ Aplikacja stworzona na rzecz dyplomu inżynierskiego Mateusza Gościnieckiego.
 Program ten został napisany na podstawie pracy inżynierskiej pt. 
 "Narzędzie do wizualizacji propagacji fal w liniach transmisyjnych opisanych modelami matematycznymi niecałkowitego rzędu".
 Aplikacja adaptuje treść obliczeniową dyplomu do programu w Pythonie. Parametry wprowadzane są przy pomocy GUI,
-a wizualizacja fal odbywa się przy pomocy wykresu. Program ma wbudowaną obsługę błędów.
+a wizualizacja propagacji fal odbywa się przy pomocy wykresu. Program ma wbudowaną obsługę błędów.
 
 ## Użyte technologie
 Część matematyczna została opisana w pracy inżynierskiej. Wszystkie zewnętrzne biblioteki użyte w projekcie
@@ -20,12 +20,12 @@ zawarte są w pliku "requirements.txt".
 Customtkinter odpowiada za wygląd całości GUI. <br>
 Numpy, Scipy używane są w części obliczeniowej programu (np. scipy.fft albo scipy.ifft). <br>
 Matplotlib odpowiedzialne jest za generowanie wykresów. <br>
-Pozostałe biblioteki obecne w pliku "requirements.txt" zostały dodane, gdyż powyższe ich wymagały.
+Pozostałe biblioteki obecne w pliku "requirements.txt" zostały dodane, gdyż powyższe ich wymagały do działania.
 
 ## Konfiguracja
-Skrypt należy uruchomić przynajmniej w wersji 3.12 Pythona. Natępnie
+Skrypt należy uruchomić przynajmniej w wersji 3.12.3 Pythona. Natępnie
 trzeba pobrać wymagane biblioteki zewnętrzne zawarte w pliku "requirements.txt".
-W celu uruchomienia aplikacji, należy opalić główny plik programu "main.py".
+W celu uruchomienia aplikacji, należy odpalić główny plik programu "main.py".
 
 ## Opis kodu i aplikacji
 
