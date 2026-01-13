@@ -45,7 +45,8 @@ operatorów w Pythonie, z funkcji zawartych w bibliotece Numpy lub z funkcji zaw
 Ostatnia funkcja "save_button" wywoływana jest przez przycisk "Save and proceed". 
 Zbiera ona dane z wprowadzonych wartości i przekazuje je do części programu, gdzie jest obliczana odpowiedź
 układu. Następnie na podstawie otrzymanych danych generuje ona wykres napięcia od czasu dla wszystkich wartości "x".
-Funckja ta odpowiedzialna jest też za obsługę błędów.
+Funckja ta odpowiedzialna jest też za obsługę błędów. Przykładowe dane, dla których wykres poprawnie się rysuje,
+są automatycznie podane przy starcie programu.
 
 ### [output_signal.py](Scripts_and_necessary_files/output_signal.py)
 Skrypt ten zawiera funkcję "output_signal" ta przyjmuje parametry modelu i symulacji oraz sygnał wejściowy. Następnie
