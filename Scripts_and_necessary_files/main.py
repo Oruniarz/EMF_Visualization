@@ -24,8 +24,8 @@ class App(ctk.CTk):
                                  aparam_example="2*(9**(1/3))",
                                  bparam_example="450",
                                  x_example="0.1,0.125,0.15,0.175,0.2",
-                                 time_axis_example="0,0.1",
-                                 y_axis_example="-1,7")
+                                 time_axis_example="0,0.125",
+                                 y_axis_example="-5,30")
 
         self.title("Main menu")
         self.geometry("1500x715")
