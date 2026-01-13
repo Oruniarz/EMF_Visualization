@@ -19,13 +19,13 @@ class App(ctk.CTk):
         self.example_dict = dict(tmax_example="1.0",
                                  nsamples_example="2**20",
                                  alpha_example="5/6",
-                                 beta_example="2/3",
-                                 gamma_example="2/3",
-                                 aparam_example="2*(9**(1/3))",
+                                 beta_example="5/6",
+                                 gamma_example="5/6",
+                                 aparam_example="2*(3**(1/3))",
                                  bparam_example="450",
                                  x_example="0.1,0.125,0.15,0.175,0.2",
-                                 time_axis_example="0,0.125",
-                                 y_axis_example="-5,30")
+                                 time_axis_example="0,0.15",
+                                 y_axis_example="-10,40")
 
         self.title("Main menu")
         self.geometry("1500x715")

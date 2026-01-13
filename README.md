@@ -23,8 +23,9 @@ Matplotlib odpowiedzialne jest za generowanie wykresów. <br>
 Pozostałe biblioteki obecne w pliku "requirements.txt" zostały dodane, gdyż powyższe ich wymagały.
 
 ## Konfiguracja
-W celu poprawnego działania programu należy najpierw pobrać wymagane biblioteki zawarte w pliku "requirements.txt".
-Plik odpowiedzialny za prawidłowe odpalenie aplikacji to "main.py"
+Skrypt należy uruchomić przynajmniej w wersji 3.12 Pythona. Natępnie
+trzeba pobrać wymagane biblioteki zewnętrzne zawarte w pliku "requirements.txt".
+W celu uruchomienia aplikacji, należy opalić główny plik programu "main.py".
 
 ## Opis kodu i aplikacji
 
